@@ -15,7 +15,16 @@ def main():
     x = SCREEN_WIDTH / 2
     y = SCREEN_HEIGHT / 2
     
-    # places player character
+    # groups to group objects together (cleaner code, Venn diagram like)
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+
+    # Player object is added into both created groups
+    # Groups can be accessed instead of Player object directly
+    # Need to be declared before first instance of Player to catch all instances
+    Player.containers = (updatable, drawable)
+
+    # "places" (calls) player character
     player = Player(x, y)
 
     # infinite while-loop to keep game running (game-loop)
@@ -26,10 +35,11 @@ def main():
         
         # fills screen with black color
         pygame.Surface.fill(screen, (0, 0, 0))
-        # updates player position
-        player.update(dt)
-        # draws player
-        player.draw(screen)
+        # updates position of all updatables
+        updatable.update(dt)
+        # draws all drawables in order
+        for character in drawable:
+            character.draw(screen)
         # reloads display...
         pygame.display.flip()
         # ...based on 1/60 second ticks (& defines delta time)
