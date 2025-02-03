@@ -1,6 +1,8 @@
 import pygame
 from constants import *
 from player import *
+from asteroid import * 
+from asteroidfield import *
 
 def main():
     # initiates pygame-module
@@ -18,14 +20,18 @@ def main():
     # groups to group objects together (cleaner code, Venn diagram like)
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
 
     # Player object is added into both created groups
     # Groups can be accessed instead of Player object directly
     # Need to be declared before first instance of Player to catch all instances
     Player.containers = (updatable, drawable)
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = updatable
 
     # "places" (calls) player character
     player = Player(x, y)
+    asteroidfield = AsteroidField()
 
     # infinite while-loop to keep game running (game-loop)
     while True:
