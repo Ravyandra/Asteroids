@@ -3,6 +3,7 @@ from constants import *
 from player import *
 from asteroid import * 
 from asteroidfield import *
+import sys
 
 def main():
     # initiates pygame-module
@@ -43,6 +44,10 @@ def main():
         pygame.Surface.fill(screen, (0, 0, 0))
         # updates position of all updatables
         updatable.update(dt)
+        for asteroid in asteroids:
+           if CircleShape.collision_check(player, asteroid):
+               sys.exit("Game Over!")
+
         # draws all drawables in order
         for character in drawable:
             character.draw(screen)
