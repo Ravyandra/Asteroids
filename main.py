@@ -35,7 +35,7 @@ def main():
     # "places" (calls) player character
     player = Player(x, y)
     asteroidfield = AsteroidField()
-
+    
     # infinite while-loop to keep game running (game-loop)
     while True:
         for event in pygame.event.get(): # calls events to detect quit event
@@ -47,8 +47,15 @@ def main():
         # updates position of all updatables
         updatable.update(dt)
         for asteroid in asteroids:
-           if CircleShape.collision_check(player, asteroid):
+            for bullet in shots:
+                if CircleShape.collision_check(bullet, asteroid):
+                    pygame.sprite.Sprite.kill(bullet)
+                    pygame.sprite.Sprite.kill(asteroid)
+    
+        for asteroid in asteroids:
+            if CircleShape.collision_check(player, asteroid):
                sys.exit("Game Over!")
+
 
         # draws all drawables in order
         for character in drawable:
