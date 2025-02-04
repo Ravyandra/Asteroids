@@ -49,8 +49,8 @@ def main():
         for asteroid in asteroids:
             for bullet in shots:
                 if CircleShape.collision_check(bullet, asteroid):
-                    pygame.sprite.Sprite.kill(bullet)
-                    pygame.sprite.Sprite.kill(asteroid)
+                    asteroid.split() # same as pygame.sprite.Sprite.kill(asteroid)
+                    bullet.kill()
     
         for asteroid in asteroids:
             if CircleShape.collision_check(player, asteroid):
