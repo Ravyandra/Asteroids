@@ -23,6 +23,7 @@ def main():
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
     shots = pygame.sprite.Group()
+    rockets = pygame.sprite.Group()
 
     # Player object is added into both created groups
     # Groups can be accessed instead of Player object directly
@@ -31,6 +32,7 @@ def main():
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = updatable
     Shot.containers = (shots, updatable, drawable)
+    Rocket.containers = (rockets, updatable, drawable)
 
     # "places" (calls) player character
     player = Player(x, y)
@@ -46,12 +48,19 @@ def main():
         pygame.Surface.fill(screen, (0, 0, 0))
         # updates position of all updatables
         updatable.update(dt)
+
+        # asteroid-bullet collision check
         for asteroid in asteroids:
             for bullet in shots:
                 if CircleShape.collision_check(bullet, asteroid):
                     asteroid.split() # same as pygame.sprite.Sprite.kill(asteroid)
                     bullet.kill()
-    
+            for rocket in rockets:
+                if CircleShape.collision_check(rocket, asteroid):
+                    asteroid.kill()
+                    rocket.aftershock(asteroids)
+
+        # asteroid-player collision check
         for asteroid in asteroids:
             if CircleShape.collision_check(player, asteroid):
                sys.exit("Game Over!")
