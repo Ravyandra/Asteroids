@@ -1,15 +1,17 @@
 import pygame
 from circleshape import CircleShape
 from constants import *
+import sys
 
-# player defined +  inheritance
+    # player defined +  inheritance
 class Player(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.PLAYER_SHOOT_COOLDOWN = 0
         self.PLAYER_ROCKET_COOLDOWN = 0
-        
+        self.PLAYER_DEATH_COOLDOWN = 0
+        self.PLAYER_LIVES = 2
         # function to set triangle geometry
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -18,6 +20,30 @@ class Player(CircleShape):
         b = self.position - forward * self.radius - right
         c = self.position - forward * self.radius + right
         return [a, b, c]
+    
+    def death_counter(self):
+        if self.PLAYER_LIVES >= 0:
+            if self.PLAYER_DEATH_COOLDOWN <= 0:
+                self.PLAYER_LIVES -= 1
+                self.PLAYER_DEATH_COOLDOWN = 2
+        else:
+            sys.exit("Game Over!")
+
+    def blinking(self):
+        if self.PLAYER_DEATH_COOLDOWN > 1.6666:
+            return False
+        elif self.PLAYER_DEATH_COOLDOWN > 1.3333:
+            return True
+        elif self.PLAYER_DEATH_COOLDOWN > 1:
+            return False
+        elif self.PLAYER_DEATH_COOLDOWN > 0.6666:
+            return True
+        elif self.PLAYER_DEATH_COOLDOWN > 0.3333:
+            return False
+        elif self.PLAYER_DEATH_COOLDOWN >0:
+            return True
+        else:
+            return True
 
         # draw player (called in main())
     def draw(self, screen):
@@ -29,6 +55,7 @@ class Player(CircleShape):
 
         # update player position
     def update(self, dt):
+        self.PLAYER_DEATH_COOLDOWN -= dt
         self.PLAYER_SHOOT_COOLDOWN -= dt
         self.PLAYER_ROCKET_COOLDOWN -= dt
         keys = pygame.key.get_pressed()
@@ -47,7 +74,7 @@ class Player(CircleShape):
         if keys[pygame.K_ESCAPE]:
             pygame.QUIT()
 
-        #   unit vector 0,0 -> 0,1 + rotation WITH the player       
+        # unit vector 0,0 -> 0,1 + rotation WITH the player       
     def move(self, dt):
         forward = pygame.Vector2(0,1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
@@ -69,11 +96,11 @@ class Shot(CircleShape):
         super().__init__(position.x, position.y, SHOT_RADIUS)
         self.velocity = velocity
     
-    # draw circle
+        # draw circle
     def draw(self, screen):
         pygame.draw.circle(screen, (255,255,255), (self.position.x, self.position.y), self.radius, 2)
 
-    # movement in straight line
+        # movement in straight line
     def update(self, dt):
         self.position += (self.velocity * dt)
 
@@ -83,14 +110,16 @@ class Rocket(CircleShape):
         super().__init__(position.x, position.y, ROCKET_RADIUS)
         self.velocity = velocity
     
-    # draw circle
+        # draw circle
     def draw(self, screen):
         pygame.draw.circle(screen, (255,255,255), (self.position.x, self.position.y), self.radius, 2)
 
-    # movement in straight line
+        # movement in straight line
     def update(self, dt):
         self.position += (self.velocity * dt)
 
+        # define explosion, increase radius, collision check with all asteroids
+        # direct hit = kill, aftershock hit = split
     def aftershock(self, asteroids):
         self.kill()
         explosion = Rocket(self.position, self.radius)

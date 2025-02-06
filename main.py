@@ -3,7 +3,6 @@ from constants import *
 from player import *
 from asteroid import * 
 from asteroidfield import *
-import sys
 
 def main():
     # initiates pygame-module
@@ -28,7 +27,7 @@ def main():
     # Player object is added into both created groups
     # Groups can be accessed instead of Player object directly
     # Need to be declared before first instance of Player to catch all instances
-    Player.containers = (updatable, drawable)
+    Player.containers = (updatable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = updatable
     Shot.containers = (shots, updatable, drawable)
@@ -49,7 +48,7 @@ def main():
         # updates position of all updatables
         updatable.update(dt)
 
-        # asteroid-bullet collision check
+        # asteroid-bullet & asteroid-rocket collision check
         for asteroid in asteroids:
             for bullet in shots:
                 if CircleShape.collision_check(bullet, asteroid):
@@ -63,7 +62,10 @@ def main():
         # asteroid-player collision check
         for asteroid in asteroids:
             if CircleShape.collision_check(player, asteroid):
-               sys.exit("Game Over!")
+                player.death_counter()
+
+        if player.blinking():
+            player.draw(screen)
 
 
         # draws all drawables in order
