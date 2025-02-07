@@ -3,6 +3,7 @@ from constants import *
 from player import *
 from asteroid import * 
 from asteroidfield import *
+from powerupfield import *
 
 def main():
     # initiates pygame-module
@@ -23,6 +24,7 @@ def main():
     asteroids = pygame.sprite.Group()
     shots = pygame.sprite.Group()
     rockets = pygame.sprite.Group()
+    powerup = pygame.sprite.Group()
 
     # Player object is added into both created groups
     # Groups can be accessed instead of Player object directly
@@ -30,13 +32,16 @@ def main():
     Player.containers = (updatable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = updatable
+    PowerUpField.containers = updatable
     Shot.containers = (shots, updatable, drawable)
     Rocket.containers = (rockets, updatable, drawable)
+    PowerUp.containers = (powerup, updatable, drawable)
 
     # "places" (calls) player character
     player = Player(x, y)
-    asteroidfield = AsteroidField()
-    
+    AsteroidField()
+    PowerUpField()
+
     # infinite while-loop to keep game running (game-loop)
     while True:
         for event in pygame.event.get(): # calls events to detect quit event
