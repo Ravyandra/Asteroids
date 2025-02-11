@@ -1,7 +1,6 @@
 import pygame
 from circleshape import CircleShape
 from constants import *
-import math
 
 class PowerUp(CircleShape):
     def __init__(self, x, y):
@@ -10,14 +9,18 @@ class PowerUp(CircleShape):
 
     def update(self, dt):
         self.position += (self.velocity * dt)
+        self.rotation += 1
 
     def square(self):
-        height = (2 * self.radius)/math.sqrt(2)
-        width = (2 * self.radius)/math.sqrt(2)
-        return (self.position.x, self.position.y, width, height)
+        side = pygame.Vector2(0,1).rotate(self.rotation) * self.radius
+        side_rotated = pygame.Vector2(0,1).rotate(self.rotation + 90) * self.radius
+        upper_left = self.position + side - side_rotated
+        upper_right = self.position + side + side_rotated
+        lower_left = self.position - side - side_rotated
+        lower_right = self.position - side + side_rotated
+        return [upper_left, upper_right, lower_left, lower_right]
     
     def draw(self, screen):
-        pygame.draw.rect(screen, (255,255,255), self.square(), 2)
+        pygame.draw.polygon(screen, (255,255,255), self.square(), 2)
 
-    def effect(self):
-        self.kill()
+    

@@ -33,8 +33,8 @@ class PowerUpField(pygame.sprite.Sprite):
         self.spawn_timer = 0.0
 
     def spawn(self, radius, position, velocity):
-        powerup = PowerUp(position, radius)
-        powerup.velocity = velocity
+            powerup = PowerUp(position, radius)
+            powerup.velocity = velocity
 
     def update(self, dt):
         self.spawn_timer += dt

@@ -8,7 +8,6 @@ from powerupfield import *
 def main():
     # initiates pygame-module
     pygame.init
-    
     # sets screen size
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     
@@ -24,7 +23,7 @@ def main():
     asteroids = pygame.sprite.Group()
     shots = pygame.sprite.Group()
     rockets = pygame.sprite.Group()
-    powerup = pygame.sprite.Group()
+    powerups = pygame.sprite.Group()
 
     # Player object is added into both created groups
     # Groups can be accessed instead of Player object directly
@@ -35,7 +34,7 @@ def main():
     PowerUpField.containers = updatable
     Shot.containers = (shots, updatable, drawable)
     Rocket.containers = (rockets, updatable, drawable)
-    PowerUp.containers = (powerup, updatable, drawable)
+    PowerUp.containers = (powerups, updatable, drawable)
 
     # "places" (calls) player character
     player = Player(x, y)
@@ -68,6 +67,22 @@ def main():
         for asteroid in asteroids:
             if CircleShape.collision_check(player, asteroid):
                 player.death_counter()
+
+        for powerup in powerups:
+            if CircleShape.collision_check(player, powerup):
+                player.fire_rate_up(powerup, dt)
+                EFFECT_TIMER = EFFECT_MAX_DURATION
+        EFFECT_STATUS = player.HAS_EFFECT
+
+        if EFFECT_STATUS:
+            if EFFECT_TIMER <= 0 :
+                player.FIRE_RATE = 1
+                EFFECT_STATUS = False
+            else:
+                EFFECT_TIMER -= dt
+        
+            
+
 
         if player.blinking():
             player.draw(screen)
