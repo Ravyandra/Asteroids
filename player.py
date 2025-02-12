@@ -15,7 +15,8 @@ class Player(CircleShape):
         self.PLAYER_LIVES = 2
         self.FIRE_RATE = 1
         self.HAS_EFFECT = False
-        # function to set triangle geometry
+
+        # function to set triangle geometry (polygon logic)
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
@@ -82,18 +83,21 @@ class Player(CircleShape):
         forward = pygame.Vector2(0,1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
 
+        # bullet logic
     def shoot_bullet(self):
         if self.PLAYER_SHOOT_COOLDOWN <= 0:
             self.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOT_SPEED
             Shot(self.position, self.velocity)
             self.PLAYER_SHOOT_COOLDOWN = 0.3 / self.FIRE_RATE
 
+        # rocket logic
     def shoot_rocket(self):
         if self.PLAYER_ROCKET_COOLDOWN <= 0:
             self.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_ROCKET_SPEED
             Rocket(self.position, self.velocity)
             self.PLAYER_ROCKET_COOLDOWN = 5 / self.FIRE_RATE
 
+        # fire rate up effect
     def fire_rate_up (self, other, dt):
         other.kill()
         self.HAS_EFFECT = True

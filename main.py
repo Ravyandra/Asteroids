@@ -4,6 +4,7 @@ from player import *
 from asteroid import * 
 from asteroidfield import *
 from powerupfield import *
+from lives_display import * 
 
 def main():
     # initiates pygame-module
@@ -68,12 +69,14 @@ def main():
             if CircleShape.collision_check(player, asteroid):
                 player.death_counter()
 
+        # power up collision + effect duration (fire rate up)
         for powerup in powerups:
             if CircleShape.collision_check(player, powerup):
                 player.fire_rate_up(powerup, dt)
                 EFFECT_TIMER = EFFECT_MAX_DURATION
         EFFECT_STATUS = player.HAS_EFFECT
 
+        # effect status check
         if EFFECT_STATUS:
             if EFFECT_TIMER <= 0 :
                 player.FIRE_RATE = 1
@@ -81,13 +84,20 @@ def main():
             else:
                 EFFECT_TIMER -= dt
         
-            
-
-
+        # player blinking after getting hit
         if player.blinking():
             player.draw(screen)
 
 
+        if player.PLAYER_LIVES == 1:
+            live_disp = Lives(SCREEN_WIDTH-30, SCREEN_HEIGHT-690)
+            live_disp.draw(screen)
+        elif player.PLAYER_LIVES == 2:
+            live_disp = Lives(SCREEN_WIDTH-30, SCREEN_HEIGHT-690)
+            live_disp.draw(screen)
+            live_disp = Lives(SCREEN_WIDTH-60, SCREEN_HEIGHT-690)
+            live_disp.draw(screen)
+            
         # draws all drawables in order
         for character in drawable:
             character.draw(screen)
