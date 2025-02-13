@@ -4,7 +4,7 @@ from player import *
 from asteroid import * 
 from asteroidfield import *
 from powerupfield import *
-from lives_display import * 
+from displays import * 
 
 def main():
     # initiates pygame-module
@@ -42,6 +42,8 @@ def main():
     AsteroidField()
     PowerUpField()
 
+    rocketbar = RocketBar(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 660)
+
     # infinite while-loop to keep game running (game-loop)
     while True:
         for event in pygame.event.get(): # calls events to detect quit event
@@ -52,6 +54,10 @@ def main():
         pygame.Surface.fill(screen, (0, 0, 0))
         # updates position of all updatables
         updatable.update(dt)
+
+        rocketbar.draw(screen)
+        rocketbar.update(dt)
+        rocketbar.rocket_shot_update(player.PLAYER_ROCKET_COOLDOWN)
 
         # asteroid-bullet & asteroid-rocket collision check
         for asteroid in asteroids:
@@ -72,7 +78,7 @@ def main():
         # power up collision + effect duration (fire rate up)
         for powerup in powerups:
             if CircleShape.collision_check(player, powerup):
-                player.fire_rate_up(powerup, dt)
+                player.fire_rate_up(powerup)
                 EFFECT_TIMER = EFFECT_MAX_DURATION
         EFFECT_STATUS = player.HAS_EFFECT
 

@@ -95,10 +95,10 @@ class Player(CircleShape):
         if self.PLAYER_ROCKET_COOLDOWN <= 0:
             self.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_ROCKET_SPEED
             Rocket(self.position, self.velocity)
-            self.PLAYER_ROCKET_COOLDOWN = 5 / self.FIRE_RATE
+            self.PLAYER_ROCKET_COOLDOWN = PLAYER_ROCKET_COOLDOWN / self.FIRE_RATE
 
         # fire rate up effect
-    def fire_rate_up (self, other, dt):
+    def fire_rate_up (self, other):
         other.kill()
         self.HAS_EFFECT = True
         self.FIRE_RATE = 3
