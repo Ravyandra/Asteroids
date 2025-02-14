@@ -55,10 +55,6 @@ def main():
         # updates position of all updatables
         updatable.update(dt)
 
-        rocketbar.draw(screen)
-        rocketbar.update(dt)
-        rocketbar.rocket_shot_update(player.PLAYER_ROCKET_COOLDOWN)
-
         # asteroid-bullet & asteroid-rocket collision check
         for asteroid in asteroids:
             for bullet in shots:
@@ -90,11 +86,16 @@ def main():
             else:
                 EFFECT_TIMER -= dt
         
+        # rocket cooldown bar logic - works, but not as intended, fix and make smarter (displays.py)
+        rocketbar.draw(screen)
+        rocketbar.rocket_shot_update(player.PLAYER_ROCKET_COOLDOWN, dt, EFFECT_STATUS)
+
+
         # player blinking after getting hit
         if player.blinking():
             player.draw(screen)
 
-
+        # player live display
         if player.PLAYER_LIVES == 1:
             live_disp = Lives(SCREEN_WIDTH-30, SCREEN_HEIGHT-690)
             live_disp.draw(screen)

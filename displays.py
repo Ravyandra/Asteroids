@@ -26,13 +26,22 @@ class RocketBar(CircleShape):
         self.position.x = x
         self.position.y = y
         self.COOLDOWN_BAR = 5
+        self.STATUS_FIRE_RATE = False
 
-    def rocket_shot_update(self, CURRENT_COOLDOWN):
-        self.COOLDOWN_BAR = CURRENT_COOLDOWN
-    
-    def update(self, dt):
-        if self.COOLDOWN_BAR <= PLAYER_ROCKET_COOLDOWN:
-            self.COOLDOWN_BAR += dt
+    def rocket_shot_update(self, CURRENT_COOLDOWN, dt, STATUS):
+        self.STATUS_FIRE_RATE = STATUS     
+        if self.STATUS_FIRE_RATE == False:
+            if CURRENT_COOLDOWN == 5:
+                self.COOLDOWN_BAR = 0
+            elif 0 < CURRENT_COOLDOWN < 5:
+                self.COOLDOWN_BAR += dt 
+        elif self.STATUS_FIRE_RATE == True:
+            if CURRENT_COOLDOWN >= 5/3:
+                self.COOLDOWN_BAR = 0
+            elif 0 < CURRENT_COOLDOWN < 5/3:
+                self.COOLDOWN_BAR += dt
+        
+        #self.COOLDOWN_BAR = CURRENT_COOLDOWN
 
     def rectangle_bar_static(self):
         self.height = 15
@@ -40,7 +49,10 @@ class RocketBar(CircleShape):
         return (self.position.x, self.position.y, self.width, self.height)
     
     def rectangle_bar_progress(self):
-        self.width_inner = 10 * self.COOLDOWN_BAR
+        if self.STATUS_FIRE_RATE == False:
+            self.width_inner = 10 * self.COOLDOWN_BAR
+        else:
+            self.width_inner = 10 * self.COOLDOWN_BAR * 3
         return (self.position.x, self.position.y, self.width_inner, self.height)
     
     def draw(self, screen):

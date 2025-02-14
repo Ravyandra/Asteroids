@@ -3,6 +3,7 @@ from circleshape import CircleShape
 from constants import *
 import sys
 from powerups import PowerUp
+from displays import RocketBar
 
     # player defined +  inheritance
 class Player(CircleShape):
@@ -96,6 +97,7 @@ class Player(CircleShape):
             self.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_ROCKET_SPEED
             Rocket(self.position, self.velocity)
             self.PLAYER_ROCKET_COOLDOWN = PLAYER_ROCKET_COOLDOWN / self.FIRE_RATE
+            
 
         # fire rate up effect
     def fire_rate_up (self, other):
