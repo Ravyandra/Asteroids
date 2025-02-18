@@ -86,7 +86,7 @@ def main():
             else:
                 EFFECT_TIMER -= dt
         
-        # rocket cooldown bar logic - works, but not as intended, fix and make smarter (displays.py)
+        # rocket cooldown bar logic - works as expected now
         rocketbar.draw(screen)
         rocketbar.rocket_shot_update(player.PLAYER_ROCKET_COOLDOWN, dt, EFFECT_STATUS)
 
